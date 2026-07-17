@@ -1,0 +1,36 @@
+{% extends 'shelter/base.html' %}
+{% block title %}Zahtjevi{% endblock %}
+
+{% block content %}
+<div class="hero-card">
+    <div class="hero-copy">
+        <p class="eyebrow">Foster zahtjevi</p>
+        <h2>Pregled dolaznih zahtjeva</h2>
+        <p>Otvorite svaki zahtjev i donesite odluku o prihvatanju, odbijanju ili odlaganju.</p>
+    </div>
+    <div class="pill-row">
+        <a class="pill-button" href="{% url 'animal_list' %}">Povratak na životinje</a>
+    </div>
+</div>
+
+<section class="section-card">
+    <div class="section-heading">
+        <h3>Zahtjevi</h3>
+        <span>10 ukupno</span>
+    </div>
+    <div class="request-list">
+        {% for request in requests %}
+        <article class="request-card">
+            <div class="request-body">
+                <h4>{{ request.animal.name }}</h4>
+                <p>Status zahtjeva: {{ request.status }}</p>
+                <p>Status životinje: {{ request.animal.status }}</p>
+                <a href="{% url 'request_detail' request.id %}">Otvori zahtjev</a>
+            </div>
+        </article>
+        {% empty %}
+        <p>Nema zahtjeva.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

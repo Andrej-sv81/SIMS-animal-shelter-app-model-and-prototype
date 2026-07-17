@@ -1,0 +1,36 @@
+{% extends 'shelter/base.html' %}
+{% load static %}
+{% block title %}Detalj zahtjeva{% endblock %}
+
+{% block content %}
+<div class="hero-card detail-card">
+    <div class="detail-media">
+        <img src="{{ animal.get_image_url }}" alt="{{ animal.name }}">
+    </div>
+    <div class="detail-copy">
+        <p class="eyebrow">Zahtev za foster</p>
+        <h2>{{ animal.name }}</h2>
+        <p><strong>Status životinje:</strong> {{ animal.status }}</p>
+        <p><strong>Trenutni zahtjev:</strong> {{ request.status }}</p>
+        <p>Upravljanje zahtjevom omogućuje odluku o prihvatanju, odbijanju ili odlaganju.</p>
+
+        <div class="action-group">
+            <form method="post" action="{% url 'close_request' request.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="decision" value="prihvacen">
+                <button type="submit" class="primary-action">Prihvati</button>
+            </form>
+            <form method="post" action="{% url 'close_request' request.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="decision" value="odbijen">
+                <button type="submit" class="secondary-action">Odbij</button>
+            </form>
+            <form method="post" action="{% url 'close_request' request.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="decision" value="odlozen">
+                <button type="submit" class="ghost-action">Odloži (Zatvori)</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

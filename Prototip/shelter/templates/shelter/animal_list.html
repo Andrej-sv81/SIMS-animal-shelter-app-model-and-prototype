@@ -1,0 +1,56 @@
+{% extends 'shelter/base.html' %}
+{% load static %}
+{% block title %}Životinje{% endblock %}
+
+{% block content %}
+<div class="hero-card">
+    <div class="hero-copy">
+        <p class="eyebrow">Upravljački panel</p>
+        <h2>Popis životinja i njihovih statusa</h2>
+        <p>Pregledajte trenutno dostupne životinje i vratite one koje su već udomljene.</p>
+    </div>
+    <div class="pill-row">
+        <a class="pill-button" href="{% url 'request_list' %}">Pregledaj zahtjeve</a>
+        <a class="pill-button secondary" href="{% url 'login' %}">Odjava</a>
+    </div>
+</div>
+
+<section class="stats-grid">
+    <article class="stat-card">
+        <h3>{{ animals|length }}</h3>
+        <p>Aktivne životinje</p>
+    </article>
+    <article class="stat-card alt">
+        <h3>{{ adopted_animals|length }}</h3>
+        <p>Udomljene životinje</p>
+    </article>
+</section>
+
+<section class="section-card">
+    <div class="section-heading">
+        <h3>Aktivne životinje</h3>
+        <span>Prikaz kartica</span>
+    </div>
+    <div class="card-grid">
+        {% for animal in animals %}
+        <article class="animal-card">
+            <img src="{{ animal.get_image_url }}" alt="{{ animal.name }}">
+            <div class="card-body">
+                <div class="card-topline">
+                    <h4>{{ animal.name }}</h4>
+                    <span class="status-badge">{{ animal.status }}</span>
+                </div>
+                {% if animal.status == 'Udomljena' %}
+                <form method="post" action="{% url 'return_animal' animal.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="secondary-action">Vrati životinju</button>
+                </form>
+                {% endif %}
+            </div>
+        </article>
+        {% empty %}
+        <p>Nema aktivnih životinja.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
