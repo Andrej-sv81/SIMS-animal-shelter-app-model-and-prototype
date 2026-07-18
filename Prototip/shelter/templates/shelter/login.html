@@ -1,0 +1,23 @@
+{% extends 'shelter/base.html' %}
+{% block title %}Admin prijava{% endblock %}
+
+{% block content %}
+<div class="hero-card auth-card">
+    <div class="hero-copy">
+        <p class="eyebrow">Animal Shelter Admin</p>
+        <h2>Prijavite se u upravljački panel</h2>
+        <p>Pregledajte životinje, upravljajte zahtjevima za udomljavanje i pratite odluke u jednom mjestu.</p>
+    </div>
+    <form method="post" class="card-form">
+        {% csrf_token %}
+        {% if error %}<p class="error-message">{{ error }}</p>{% endif %}
+        <label for="username">Korisničko ime</label>
+        <input id="username" type="text" name="username" placeholder="admin" required>
+
+        <label for="password">Lozinka</label>
+        <input id="password" type="password" name="password" placeholder="••••••••" required>
+
+        <button type="submit">Prijavi se</button>
+    </form>
+</div>
+{% endblock %}

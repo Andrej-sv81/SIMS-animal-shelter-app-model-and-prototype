@@ -1,0 +1,39 @@
+{% extends 'shelter/base.html' %}
+{% block title %}Udomljene životinje{% endblock %}
+
+{% block content %}
+<div class="hero-card">
+    <div class="hero-copy">
+        <p class="eyebrow">Udomljene životinje</p>
+        <h2>Popis životinja koje su pronašle dom</h2>
+    </div>
+    <div class="pill-row">
+        <a class="pill-button" href="{% url 'animal_list' %}">Nazad na aktivne životinje</a>
+    </div>
+</div>
+
+<section class="section-card">
+    <div class="section-heading">
+        <span>{{ adopted_animals|length }} ukupno</span>
+    </div>
+    <div class="card-grid">
+        {% for animal in adopted_animals %}
+        <article class="animal-card">
+            <img src="{{ animal.get_image_url }}" alt="{{ animal.name }}">
+            <div class="card-body">
+                <div class="card-topline">
+                    <h4>{{ animal.name }}</h4>
+                    <span class="status-badge">{{ animal.status }}</span>
+                </div>
+                <form method="post" action="{% url 'return_animal' animal.id %}" onsubmit="return confirm('Jeste li sigurni da želite vratiti ovu životinju na status Slobodna?');">
+                    {% csrf_token %}
+                    <button type="submit" class="secondary-action">Vraćanje u sklonište</button>
+                </form>
+            </div>
+        </article>
+        {% empty %}
+        <p>Nema udomljenih životinja.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
