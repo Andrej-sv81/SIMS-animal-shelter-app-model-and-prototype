@@ -1,0 +1,27 @@
+{% extends 'shelter/base.html' %}
+{% load static %}
+{% block title %}Detalji životinje{% endblock %}
+
+{% block content %}
+<div class="hero-card detail-card">
+    <div class="detail-media">
+        <img class="detail-animal-image" src="{{ animal.get_image_url }}" alt="{{ animal.name }}">
+    </div>
+    <div class="detail-copy">
+        <p class="eyebrow">Detalji životinje</p>
+        <h2>{{ animal.name }}</h2>
+        <p><strong>Status:</strong> {{ animal.status }}</p>
+
+        {% if requests %}
+        <p><strong>Godine:</strong>5</p>
+        <p><strong>Pol:</strong> Muški</p>
+        {% else %}
+        <p>Nema zahtjeva za ovu životinju.</p>
+        {% endif %}
+
+        <div class="action-group">
+            <a class="pill-button" href="{% url 'animal_list' %}">Nazad na popis</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

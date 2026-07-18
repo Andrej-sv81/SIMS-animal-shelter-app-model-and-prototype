@@ -5,10 +5,10 @@
 <div class="hero-card success-card">
     <p class="eyebrow">Operacija uspješna</p>
     <h2>{{ message }}</h2>
-    <p>Vaša odluka je spremljena i spremna je za daljnji pregled.</p>
+    <p>Vaša odluka je sačuvana.</p>
     <div class="pill-row">
-        <a class="pill-button" href="{% url 'animal_list' %}">Povratak na životinje</a>
-        <a class="pill-button secondary" href="{% url 'request_list' %}">Pregledaj zahtjeve</a>
+        <a class="pill-button" href="{% url 'animal_list' %}">Nazad na životinje</a>
+        <a class="pill-button secondary" href="{% url 'request_list' %}">Pregled zahtjeva</a>
     </div>
 </div>
 {% endblock %}
