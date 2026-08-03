@@ -1,0 +1,32 @@
+{% extends 'shelter/base.html' %}
+{% block title %}Organizacije{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Organizacije</h1>
+            <p class="text-muted">Pregled svih aktivnih organizacija.</p>
+        </div>
+        <a class="btn btn-primary" href="{% url 'create_organization' %}">Nova organizacija</a>
+    </div>
+
+    <div class="row g-4">
+        {% for organization in organizations %}
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ organization.name }}</h5>
+                    <p class="card-text">{{ organization.description|default:'Nema opisa.' }}</p>
+                    <a class="btn btn-outline-primary" href="{% url 'organization_detail' organization.id %}">Detalji</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">Nema dostupnih organizacija.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

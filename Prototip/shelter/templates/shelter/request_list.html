@@ -2,38 +2,27 @@
 {% block title %}Zahtjevi{% endblock %}
 
 {% block content %}
-<div class="hero-card">
-    <div class="hero-copy">
-        <p class="eyebrow">Zahtjevi za udomljavanje</p>
-        <h2>Pregled dolaznih zahtjeva</h2>
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Zahtjevi</h1>
+            <p class="text-muted">Svi zahtjevi za udomljavanje organizacije.</p>
+        </div>
+        <a class="btn btn-outline-secondary" href="{% url 'organization_list' %}">Povratak na organizacije</a>
     </div>
-    <div class="pill-row">
-        <a class="pill-button" href="{% url 'animal_list' %}">Nazad na životinje</a>
-    </div>
-</div>
 
-<section class="section-card">
-    <div class="section-heading">
-        <span>10 ukupno</span>
-    </div>
-    <div class="request-list">
+    <div class="list-group">
         {% for request in requests %}
-        <article class="request-card">
-            <img src="{{ request.animal.get_image_url }}" alt="{{ request.animal.name }}">
-            <div class="request-body">
-                <h4>{{ request.animal.name }}</h4>
-                <p>Status zahtjeva: {{ request.status }}</p>
-                <p>Status životinje: {{ request.animal.status }}</p>
-                {% if request.status == 'Na čekanju' %}
-                <a href="{% url 'request_detail' request.id %}">Otvori zahtjev</a>
-                {% else %}
-                <span class="request-disabled">Zatvoren zahtjev</span>
-                {% endif %}
+        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="{% url 'request_detail' request.id %}">
+            <div>
+                <h5 class="mb-1">{{ request.animal.name }}</h5>
+                <p class="mb-0">{{ request.applicant_first_name }} {{ request.applicant_last_name }} • {{ request.status }}</p>
             </div>
-        </article>
+            <span class="badge {% if request.status == 'Na čekanju' %}bg-warning text-dark{% elif request.status == 'Prihvaćen' %}bg-success{% else %}bg-danger{% endif %}">{{ request.status }}</span>
+        </a>
         {% empty %}
-        <p>Nema zahtjeva.</p>
+        <div class="alert alert-info">Nema zahtjeva.</div>
         {% endfor %}
     </div>
-</section>
+</div>
 {% endblock %}

@@ -5,11 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Animal Shelter{% endblock %}</title>
     {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-HzLeBuhoNPvSlYHbidkTToI1FNG4bD2+uIYz6l+89bq+3j5QJ0zNNmno+LxWp6KY" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'shelter/css/style.css' %}">
 </head>
-<body>
-    <div class="page-shell">
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Animal Shelter</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'organization_list' %}">Organizacije</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'animal_list' %}">Životinje</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'adopter_list' %}">Udomitelji</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'request_list' %}">Zahtjevi</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Odjava</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Prijava</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'register_volunteer' %}">Registracija</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
         {% block content %}{% endblock %}
-    </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6iBYl4jI+eI3vGDz4S7FqXR3Q/C5D0uCOmCjL+9Ld9Bls2UHNS3" crossorigin="anonymous"></script>
 </body>
 </html>
