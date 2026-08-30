@@ -1,0 +1,3 @@
+com\shelter\api\ShelterApiApplication.class
+com\shelter\api\Animal.class
+com\shelter\api\AnimalController.class
