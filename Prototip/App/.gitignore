@@ -1,0 +1,26 @@
+
+# Spring Boot / Maven
+shelter-api/target/
+*.class
+
+# Angular / Node generated files
+shelter-ui/node_modules/
+shelter-ui/dist/
+shelter-ui/.angular/
+shelter-ui/out-tsc/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Application logs
+*.log
+
+# IDE metadata
+.idea/
+*.iml
+
+# Operating system files
+.DS_Store
+Thumbs.db
