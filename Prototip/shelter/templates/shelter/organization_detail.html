@@ -1,0 +1,83 @@
+{% extends 'shelter/base.html' %}
+{% block title %}{{ organization.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <h1>{{ organization.name }}</h1>
+            <p class="text-muted">{{ organization.description|default:'Nema opisa.' }}</p>
+        </div>
+        <div class="btn-group">
+            {% if membership and membership.organization == organization and membership.is_admin %}
+                <a class="btn btn-outline-secondary" href="{% url 'edit_organization' organization.id %}">Uredi organizaciju</a>
+                <a class="btn btn-outline-secondary" href="{% url 'register_volunteer' %}">Dodaj volontera</a>
+                <a class="btn btn-outline-primary" href="{% url 'add_animal' organization.id %}">Dodaj životinju</a>
+                <a class="btn btn-outline-primary" href="{% url 'organization_volunteers' organization.id %}">Volonteri</a>
+                <a class="btn btn-outline-danger" href="{% url 'delete_organization' organization.id %}">Obriši organizaciju</a>
+            {% elif membership and membership.organization == organization %}
+                <a class="btn btn-outline-primary" href="{% url 'add_animal' organization.id %}">Dodaj životinju</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Životinje</h5>
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                        {% for animal in animals %}
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body d-flex flex-column gap-2">
+                                    <h5 class="card-title">{{ animal.name }}</h5>
+                                    <p class="mb-1"><strong>Status:</strong> {{ animal.status }}</p>
+                                    <div class="mt-auto d-flex gap-2 flex-wrap">
+                                        <a class="btn btn-sm btn-primary" href="{% url 'animal_detail' animal.id %}">Detalji</a>
+                                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'edit_animal' animal.id %}">Uredi</a>
+                                        <form method="post" action="{% url 'delete_animal' animal.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button class="btn btn-sm btn-danger" type="submit">Obriši</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12">
+                            <div class="alert alert-warning">Nema dostupnih životinja.</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Volonteri</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for volunteer in volunteers %}
+                        <li class="list-group-item">{{ volunteer.user.username }}</li>
+                        {% empty %}
+                        <li class="list-group-item">Nema volontera.</li>
+                        {% endfor %}
+                    </ul>
+                    {% if membership and membership.organization == organization and membership.is_admin %}
+                    <a class="btn btn-sm btn-outline-primary mt-3" href="{% url 'organization_volunteers' organization.id %}">Pogledaj volontere</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Bankovni izvještaji</h5>
+                    <p class="text-muted mb-3">Pregled dostupnih izvještaja.</p>
+                    <a class="btn btn-sm btn-primary" href="{% url 'bank_statement_list' organization.id %}">Pogledaj izvještaje</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

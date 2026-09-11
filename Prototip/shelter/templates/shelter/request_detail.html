@@ -12,11 +12,12 @@
         <h2>{{ animal.name }}</h2>
         <p><strong>Status životinje:</strong> {{ animal.status }}</p>
         <p><strong>Trenutni zahtjev:</strong> {{ request.status }}</p>
-        <p><strong>Ime:</strong> Marko </p>
-        <p><strong>Prezime:</strong> Marković</p>
-        <p><strong>Telefon:</strong> 0912345678</p>
-        <p><strong>E-mail:</strong> marko.markovic@example.com</p>
-        <p><strong>Opis:</strong> {{ request.get_description }}</p>
+        <p><strong>Ime:</strong> {{ request.applicant_first_name }}</p>
+        <p><strong>Prezime:</strong> {{ request.applicant_last_name }}</p>
+        <p><strong>Telefon:</strong> {{ request.applicant_phone }}</p>
+        <p><strong>E-mail:</strong> {{ request.applicant_email }}</p>
+        <p><strong>Poruka:</strong> {{ request.message|default:'Nema dodatnog opisa.' }}</p>
+        <p><strong>Opis životinje:</strong> {{ request.get_description }}</p>
 
         <div class="action-group">
             <form method="post" action="{% url 'close_request' request.id %}">

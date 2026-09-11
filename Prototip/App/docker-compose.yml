@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: shelterdb
+      POSTGRES_USER: shelter
+      POSTGRES_PASSWORD: shelter
+    ports:
+      - "5432:5432"
+    volumes:
+      - shelter-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shelter -d shelterdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./shelter-api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/shelterdb
+      SPRING_DATASOURCE_USERNAME: shelter
+      SPRING_DATASOURCE_PASSWORD: shelter
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  shelter-postgres-data:
