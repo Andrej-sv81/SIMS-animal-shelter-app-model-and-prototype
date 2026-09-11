@@ -1,3 +1,6 @@
 com\shelter\api\ShelterApiApplication.class
-com\shelter\api\Animal.class
-com\shelter\api\AnimalController.class
+com\shelter\api\Services\AnimalService.class
+com\shelter\api\Models\Animal.class
+com\shelter\api\Models\DTOs\AnimalDto.class
+com\shelter\api\Controllers\AnimalController.class
+com\shelter\api\Repositories\AnimalRepository.class

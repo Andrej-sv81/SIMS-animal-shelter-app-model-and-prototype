@@ -1,3 +1,6 @@
-C:\Users\User\Documents\GitHub\nvt-wholesale-platform\SIMS-animal-shelter-app-model-and-prototype\Prototip\App\shelter-api\src\main\java\com\shelter\api\Animal.java
-C:\Users\User\Documents\GitHub\nvt-wholesale-platform\SIMS-animal-shelter-app-model-and-prototype\Prototip\App\shelter-api\src\main\java\com\shelter\api\AnimalController.java
+C:\Users\User\Documents\GitHub\nvt-wholesale-platform\SIMS-animal-shelter-app-model-and-prototype\Prototip\App\shelter-api\src\main\java\com\shelter\api\Controllers\AnimalController.java
+C:\Users\User\Documents\GitHub\nvt-wholesale-platform\SIMS-animal-shelter-app-model-and-prototype\Prototip\App\shelter-api\src\main\java\com\shelter\api\Models\Animal.java
+C:\Users\User\Documents\GitHub\nvt-wholesale-platform\SIMS-animal-shelter-app-model-and-prototype\Prototip\App\shelter-api\src\main\java\com\shelter\api\Models\DTOs\AnimalDto.java
+C:\Users\User\Documents\GitHub\nvt-wholesale-platform\SIMS-animal-shelter-app-model-and-prototype\Prototip\App\shelter-api\src\main\java\com\shelter\api\Repositories\AnimalRepository.java
+C:\Users\User\Documents\GitHub\nvt-wholesale-platform\SIMS-animal-shelter-app-model-and-prototype\Prototip\App\shelter-api\src\main\java\com\shelter\api\Services\AnimalService.java
 C:\Users\User\Documents\GitHub\nvt-wholesale-platform\SIMS-animal-shelter-app-model-and-prototype\Prototip\App\shelter-api\src\main\java\com\shelter\api\ShelterApiApplication.java
