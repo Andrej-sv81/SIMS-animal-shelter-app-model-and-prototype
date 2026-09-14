@@ -1,0 +1,82 @@
+<main class="details-page">
+  <a class="button button-back" routerLink="/organizations">Back to organizations</a>
+
+  @if (loading) {
+    <p class="state">Loading organization...</p>
+  } @else if (organization) {
+    <header class="details-header">
+      <div>
+        <p class="eyebrow">Organization details</p>
+        <h1>{{ organization.name }}</h1>
+        <p class="intro">{{ organization.description || 'No description provided.' }}</p>
+      </div>
+    </header>
+
+    @if (notice) { <p class="feedback success" role="status">{{ notice }}</p> }
+    @if (error) { <p class="feedback error" role="alert">{{ error }}</p> }
+
+    @if (editing) {
+      <form class="edit-form" #organizationForm="ngForm" (ngSubmit)="saveOrganization()">
+        <h2>Edit organization</h2>
+        <div class="field-grid">
+          <label class="row-1">Name<input name="name" [(ngModel)]="form.name" required /></label>
+          <label class="row-1">Bank account<input name="bankAccount" [(ngModel)]="form.bankAccount" /></label>
+          <label class="row-2">Admin first name<input name="adminFirstName" [(ngModel)]="form.adminFirstName" required /></label>
+          <label class="row-2">Admin last name<input name="adminLastName" [(ngModel)]="form.adminLastName" required /></label>
+          <label class="row-2">Admin email<input type="email" name="adminEmail" [(ngModel)]="form.adminEmail" required /></label>
+          <label class="row-2">Admin phone<input name="adminPhone" [(ngModel)]="form.adminPhone" /></label>
+          <label class="wide-field">Description<textarea name="description" [(ngModel)]="form.description" rows="3"></textarea></label>
+          <label>New admin password<input type="password" name="adminPassword" [(ngModel)]="form.adminPassword" /></label>
+          <label>Confirm new password<input type="password" name="adminPasswordConfirm" [(ngModel)]="form.adminPasswordConfirm" [required]="!!form.adminPassword" /></label>
+          @if (form.adminPassword && form.adminPasswordConfirm && form.adminPassword !== form.adminPasswordConfirm) {
+            <p class="field-error wide-field">Passwords do not match.</p>
+          }
+        </div>
+        <div class="form-actions">
+          <button class="button button-danger" type="button" (click)="removeOrganization()">Delete organization</button>
+          <button class="button button-quiet" type="button" (click)="cancelEditing()">Cancel</button>
+          <button class="button button-primary" type="submit" [disabled]="organizationForm.invalid || saving">{{ saving ? 'Saving...' : 'Save changes' }}</button>
+        </div>
+      </form>
+    }
+
+    <section class="summary-grid">
+      <div class="summary-row-1"><span>Bank account</span><strong>{{ organization.bankAccount || 'Not provided' }}</strong></div>
+      <div class="summary-row-1"><span>Administrator</span><strong>{{ organization.admin.firstName }} {{ organization.admin.lastName }}</strong></div>
+      <div class="summary-row-2"><span>Email</span><strong>{{ organization.admin.email }}</strong></div>
+      <div class="summary-row-2"><span>Phone</span><strong>{{ organization.admin.phone || 'Not provided' }}</strong></div>
+    </section>
+
+    <div class="organization-toolbar" aria-label="Organization actions">
+      <button class="menu-tab" type="button" (click)="startEditing()">
+        <span>Manage organization</span>
+        <small>Edit details and update administrator information.</small>
+      </button>
+      <a class="menu-tab" [routerLink]="['/organizations', organization.id, 'animals']">
+        <span>Manage animals</span>
+        <small>Review, add, edit and remove animals for this organization.</small>
+      </a>
+    </div>
+
+    <section class="animals-section">
+      <div class="section-heading">
+        <div><p class="eyebrow">Registered animals</p><h2>All animals</h2></div>
+      </div>
+      <div class="animal-grid">
+        @for (animal of animals; track animal.id) {
+          <a class="animal-card" [routerLink]="['/organizations', organization.id, 'animals', animal.id]">
+            <img [src]="animalImageUrl(animal)" [alt]="animal.name" />
+            <h3>{{ animal.name }}</h3>
+            <p class="animal-meta">{{ animal.species }} · {{ animal.gender }} · {{ animal.age }} years</p>
+            <span>{{ animal.status }}</span>
+            <strong class="animal-adopter">Adopter: {{ animal.adopter || 'Not provided' }}</strong>
+          </a>
+        } @empty {
+          <p class="state">No animals are registered for this organization.</p>
+        }
+      </div>
+    </section>
+  } @else {
+    <p class="feedback error">{{ error }}</p>
+  }
+</main>
