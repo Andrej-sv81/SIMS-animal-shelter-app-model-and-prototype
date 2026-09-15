@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import {
   Organization,
   OrganizationApiService,
-  OrganizationRequest
+  OrganizationRequest,
 } from '../../services/organization-api.service';
 
 interface OrganizationEditForm extends OrganizationRequest {
@@ -17,7 +17,7 @@ interface OrganizationEditForm extends OrganizationRequest {
   selector: 'app-organization-details',
   imports: [FormsModule, RouterLink],
   templateUrl: './organization-details.component.html',
-  styleUrl: './organization-details.component.css'
+  styleUrl: './organization-details.component.css',
 })
 export class OrganizationDetailsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -63,7 +63,7 @@ export class OrganizationDetailsComponent implements OnInit {
       adminEmail: this.organization.admin.email,
       adminPhone: this.organization.admin.phone,
       adminPassword: '',
-      adminPasswordConfirm: ''
+      adminPasswordConfirm: '',
     };
     this.editing = true;
     this.clearMessages();
@@ -95,25 +95,30 @@ export class OrganizationDetailsComponent implements OnInit {
       delete payload.adminPassword;
     }
 
-    this.organizationApi.updateOrganization(this.organizationId, payload as OrganizationRequest).subscribe({
-      next: (organization) => {
-        this.organization = organization;
-        this.editing = false;
-        this.saving = false;
-        this.notice = 'Organization updated successfully.';
-      },
-      error: (response) => {
-        this.error = response.error?.detail || response.error?.message || 'The organization could not be updated.';
-        this.saving = false;
-      }
-    });
+    this.organizationApi
+      .updateOrganization(this.organizationId, payload as OrganizationRequest)
+      .subscribe({
+        next: (organization) => {
+          this.organization = organization;
+          this.editing = false;
+          this.saving = false;
+          this.notice = 'Organization updated successfully.';
+        },
+        error: (response) => {
+          this.error =
+            response.error?.detail ||
+            response.error?.message ||
+            'The organization could not be updated.';
+          this.saving = false;
+        },
+      });
   }
 
   protected removeOrganization(): void {
     if (!this.organization || !window.confirm(`Delete ${this.organization.name}?`)) return;
     this.organizationApi.deleteOrganization(this.organizationId).subscribe({
       next: () => this.router.navigate(['/organizations']),
-      error: () => this.error = 'The organization could not be deleted.'
+      error: () => (this.error = 'The organization could not be deleted.'),
     });
   }
 
@@ -130,7 +135,7 @@ export class OrganizationDetailsComponent implements OnInit {
       error: () => {
         this.error = 'The organization could not be loaded.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -143,7 +148,7 @@ export class OrganizationDetailsComponent implements OnInit {
       error: () => {
         this.error = 'The animals could not be loaded.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -162,7 +167,7 @@ export class OrganizationDetailsComponent implements OnInit {
       adminEmail: '',
       adminPhone: '',
       adminPassword: '',
-      adminPasswordConfirm: ''
+      adminPasswordConfirm: '',
     };
   }
 }

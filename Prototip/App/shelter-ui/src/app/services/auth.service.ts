@@ -21,9 +21,9 @@ export class AuthService {
   private readonly storageKey = 'shelter-auth-user';
 
   login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
-      tap((user) => localStorage.setItem(this.storageKey, JSON.stringify(user)))
-    );
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/login`, { email, password })
+      .pipe(tap((user) => localStorage.setItem(this.storageKey, JSON.stringify(user))));
   }
 
   logout(): void {
@@ -37,7 +37,7 @@ export class AuthService {
 
   currentUser(): LoginResponse | null {
     const storedUser = localStorage.getItem(this.storageKey);
-    return storedUser ? JSON.parse(storedUser) as LoginResponse : null;
+    return storedUser ? (JSON.parse(storedUser) as LoginResponse) : null;
   }
 
   isSuperAdmin(): boolean {
@@ -72,9 +72,13 @@ export const organizationAccessGuard: CanActivateFn = (route) => {
       : router.createUrlTree(['/organizations']);
   }
 
-  return organizationApi.getOrganizationForAdmin(user.userId).pipe(
-    map((organization) => String(organization.id) === route.paramMap.get('organizationId')
-      ? true
-      : router.createUrlTree(['/organizations']))
-  );
+  return organizationApi
+    .getOrganizationForAdmin(user.userId)
+    .pipe(
+      map((organization) =>
+        String(organization.id) === route.paramMap.get('organizationId')
+          ? true
+          : router.createUrlTree(['/organizations']),
+      ),
+    );
 };

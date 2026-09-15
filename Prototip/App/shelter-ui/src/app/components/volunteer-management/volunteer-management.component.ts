@@ -1,7 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Volunteer, VolunteerApiService, VolunteerRequest } from '../../services/volunteer-api.service';
+import {
+  Volunteer,
+  VolunteerApiService,
+  VolunteerRequest,
+} from '../../services/volunteer-api.service';
 import { Organization, OrganizationApiService } from '../../services/organization-api.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -9,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-volunteer-management',
   imports: [FormsModule, RouterLink],
   templateUrl: './volunteer-management.component.html',
-  styleUrl: './volunteer-management.component.css'
+  styleUrl: './volunteer-management.component.css',
 })
 export class VolunteerManagementComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -46,7 +50,7 @@ export class VolunteerManagementComponent implements OnInit {
       error: () => {
         this.error = 'The organization could not be loaded.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -66,9 +70,12 @@ export class VolunteerManagementComponent implements OnInit {
         this.loadVolunteers();
       },
       error: (response) => {
-        this.error = response.error?.detail || response.error?.message || 'The volunteer could not be registered.';
+        this.error =
+          response.error?.detail ||
+          response.error?.message ||
+          'The volunteer could not be registered.';
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -78,7 +85,7 @@ export class VolunteerManagementComponent implements OnInit {
         volunteer.active = updatedVolunteer.active;
         this.notice = updatedVolunteer.active ? 'Volunteer activated.' : 'Volunteer deactivated.';
       },
-      error: () => this.error = 'The volunteer status could not be changed.'
+      error: () => (this.error = 'The volunteer status could not be changed.'),
     });
   }
 
@@ -91,7 +98,7 @@ export class VolunteerManagementComponent implements OnInit {
       error: () => {
         this.error = 'The volunteers could not be loaded.';
         this.loading = false;
-      }
+      },
     });
   }
 

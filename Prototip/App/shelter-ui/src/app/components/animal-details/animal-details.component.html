@@ -1,5 +1,7 @@
 <main class="animal-details-page">
-  <a class="button button-back" [routerLink]="['/organizations', organizationId]">Back to organization</a>
+  <a class="button button-back" [routerLink]="['/organizations', organizationId]"
+    >Back to organization</a
+  >
 
   @if (loading) {
     <p class="state">Loading animal...</p>
@@ -8,15 +10,23 @@
       <div>
         <p class="eyebrow">Animal details</p>
         <h1>{{ animal.name }}</h1>
-        <p class="intro">{{ animal.species }} · {{ animal.age }} years · {{ genderLabel(animal.gender) }}</p>
+        <p class="intro">
+          {{ animal.species }} · {{ animal.age }} years · {{ genderLabel(animal.gender) }}
+        </p>
       </div>
       <div class="header-actions">
-        <button class="button button-secondary" type="button" (click)="startEditing()">Edit animal</button>
+        <button class="button button-secondary" type="button" (click)="startEditing()">
+          Edit animal
+        </button>
       </div>
     </header>
 
-    @if (notice) { <p class="feedback success" role="status">{{ notice }}</p> }
-    @if (error) { <p class="feedback error" role="alert">{{ error }}</p> }
+    @if (notice) {
+      <p class="feedback success" role="status">{{ notice }}</p>
+    }
+    @if (error) {
+      <p class="feedback error" role="alert">{{ error }}</p>
+    }
 
     @if (editing) {
       <form class="edit-form" #animalForm="ngForm" (ngSubmit)="saveAnimal()">
@@ -24,30 +34,75 @@
         <div class="field-grid">
           <label>Name<input name="name" [(ngModel)]="form.name" required /></label>
           <label>Species<input name="species" [(ngModel)]="form.species" required /></label>
-          <label>Age<input type="number" min="0" name="age" [(ngModel)]="form.age" required /></label>
-          <label>Gender
+          <label
+            >Age<input type="number" min="0" name="age" [(ngModel)]="form.age" required
+          /></label>
+          <label
+            >Gender
             <select name="gender" [(ngModel)]="form.gender" required>
               <option value="MALE">Male</option>
               <option value="FEMALE">Female</option>
             </select>
           </label>
-          <label>Status
-            <select name="status" [(ngModel)]="form.status" (ngModelChange)="onStatusChange($event)" required>
+          <label
+            >Status
+            <select
+              name="status"
+              [(ngModel)]="form.status"
+              (ngModelChange)="onStatusChange($event)"
+              required
+            >
               <option value="FREE">Free</option>
               <option value="IN_PROCESS">In process</option>
               <option value="ADOPTED">Adopted</option>
             </select>
           </label>
-          <label>Adopter<input name="adopter" [(ngModel)]="form.adopter" [disabled]="form.status === 'FREE'" /></label>
-          <label class="wide-field">Health conditions or problems<textarea name="healthDescription" [(ngModel)]="form.healthDescription" rows="3"></textarea></label>
-          <label class="wide-field">Character, habits and notes<textarea name="behaviorNotes" [(ngModel)]="form.behaviorNotes" rows="3"></textarea></label>
-          <label class="wide-field">New images<input type="file" accept="image/*" multiple name="image" (change)="onImageSelected($event)" /></label>
-          @if (form.imageUrl) { <img class="edit-preview" [src]="form.imageUrl" [alt]="form.name" /> }
+          <label
+            >Adopter<input
+              name="adopter"
+              [(ngModel)]="form.adopter"
+              [disabled]="form.status === 'FREE'"
+          /></label>
+          <label class="wide-field"
+            >Health conditions or problems<textarea
+              name="healthDescription"
+              [(ngModel)]="form.healthDescription"
+              rows="3"
+            ></textarea>
+          </label>
+          <label class="wide-field"
+            >Character, habits and notes<textarea
+              name="behaviorNotes"
+              [(ngModel)]="form.behaviorNotes"
+              rows="3"
+            ></textarea>
+          </label>
+          <label class="wide-field"
+            >New images<input
+              type="file"
+              accept="image/*"
+              multiple
+              name="image"
+              (change)="onImageSelected($event)"
+          /></label>
+          @if (form.imageUrl) {
+            <img class="edit-preview" [src]="form.imageUrl" [alt]="form.name" />
+          }
         </div>
         <div class="form-actions">
-          <button class="button button-danger" type="button" (click)="removeAnimal()">Delete animal</button>
-          <button class="button button-quiet" type="button" (click)="cancelEditing()">Cancel</button>
-          <button class="button button-primary" type="submit" [disabled]="animalForm.invalid || saving">{{ saving ? 'Saving...' : 'Save changes' }}</button>
+          <button class="button button-danger" type="button" (click)="removeAnimal()">
+            Delete animal
+          </button>
+          <button class="button button-quiet" type="button" (click)="cancelEditing()">
+            Cancel
+          </button>
+          <button
+            class="button button-primary"
+            type="submit"
+            [disabled]="animalForm.invalid || saving"
+          >
+            {{ saving ? 'Saving...' : 'Save changes' }}
+          </button>
         </div>
       </form>
     }
@@ -55,19 +110,42 @@
     <section class="animal-summary">
       <img class="hero-image" [src]="imageUrl()" [alt]="animal.name" />
       <div class="summary-grid">
-        <div><span>Name</span><strong>{{ animal.name }}</strong></div>
-        <div><span>Species</span><strong>{{ animal.species }}</strong></div>
-        <div><span>Age</span><strong>{{ animal.age }} years</strong></div>
-        <div><span>Gender</span><strong>{{ genderLabel(animal.gender) }}</strong></div>
-        <div><span>Current status</span><strong>{{ statusLabel(animal.status) }}</strong></div>
-        <div><span>Adopter</span><strong>{{ animal.adopter || 'Not provided' }}</strong></div>
-        <div class="wide-detail"><span>Organization</span><strong>{{ animal.organizationName }}</strong></div>
-        <div class="wide-detail"><span>Health conditions or problems</span><p>{{ animal.healthDescription || 'No health problems provided.' }}</p></div>
-        <div class="wide-detail"><span>Character, habits and notes</span><p>{{ animal.behaviorNotes || 'No additional notes provided.' }}</p></div>
+        <div>
+          <span>Name</span><strong>{{ animal.name }}</strong>
+        </div>
+        <div>
+          <span>Species</span><strong>{{ animal.species }}</strong>
+        </div>
+        <div>
+          <span>Age</span><strong>{{ animal.age }} years</strong>
+        </div>
+        <div>
+          <span>Gender</span><strong>{{ genderLabel(animal.gender) }}</strong>
+        </div>
+        <div>
+          <span>Current status</span><strong>{{ statusLabel(animal.status) }}</strong>
+        </div>
+        <div>
+          <span>Adopter</span><strong>{{ animal.adopter || 'Not provided' }}</strong>
+        </div>
+        <div class="wide-detail">
+          <span>Organization</span><strong>{{ animal.organizationName }}</strong>
+        </div>
+        <div class="wide-detail">
+          <span>Health conditions or problems</span>
+          <p>{{ animal.healthDescription || 'No health problems provided.' }}</p>
+        </div>
+        <div class="wide-detail">
+          <span>Character, habits and notes</span>
+          <p>{{ animal.behaviorNotes || 'No additional notes provided.' }}</p>
+        </div>
       </div>
     </section>
     <section class="image-gallery">
-      <div class="section-heading"><p class="eyebrow">Animal images</p><h2>All images</h2></div>
+      <div class="section-heading">
+        <p class="eyebrow">Animal images</p>
+        <h2>All images</h2>
+      </div>
       <div class="gallery-grid">
         @for (image of imageUrls(); track image) {
           <figure class="gallery-item">
@@ -77,7 +155,10 @@
               type="button"
               aria-label="Remove image"
               title="Remove image"
-              (click)="removeImage(image)">×</button>
+              (click)="removeImage(image)"
+            >
+              ×
+            </button>
           </figure>
         } @empty {
           <p class="state">No images uploaded.</p>

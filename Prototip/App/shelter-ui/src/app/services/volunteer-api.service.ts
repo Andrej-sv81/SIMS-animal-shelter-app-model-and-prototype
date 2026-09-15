@@ -37,6 +37,9 @@ export class VolunteerApiService {
   }
 
   toggleActive(organizationId: number, volunteerId: number): Observable<Volunteer> {
-    return this.http.patch<Volunteer>(`${this.apiUrl}/${organizationId}/volunteers/${volunteerId}/active`, {});
+    return this.http.patch<Volunteer>(
+      `${this.apiUrl}/${organizationId}/volunteers/${volunteerId}/active`,
+      {},
+    );
   }
 }

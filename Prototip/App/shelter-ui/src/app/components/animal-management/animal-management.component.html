@@ -1,5 +1,7 @@
 <main class="animal-page">
-  <a class="button button-back" [routerLink]="['/organizations', organizationId]">Back to organization</a>
+  <a class="button button-back" [routerLink]="['/organizations', organizationId]"
+    >Back to organization</a
+  >
   @if (organization) {
     <header class="page-heading">
       <p class="eyebrow">Organization workspace</p>
@@ -8,104 +10,124 @@
     </header>
   }
 
-<section class="animal-management" aria-label="Animals">
-  <div class="animal-heading">
-    <div>
-      <p class="eyebrow">Animals</p>
-      <h4>{{ animals.length }} registered</h4>
+  <section class="animal-management" aria-label="Animals">
+    <div class="animal-heading">
+      <div>
+        <p class="eyebrow">Animals</p>
+        <h4>{{ animals.length }} registered</h4>
+      </div>
+      @if (editingId !== null) {
+        <button class="button button-quiet" type="button" (click)="cancelEdit()">Cancel</button>
+      }
     </div>
-    @if (editingId !== null) {
-      <button class="button button-quiet" type="button" (click)="cancelEdit()">Cancel</button>
+
+    <form class="animal-form" #animalForm="ngForm" (ngSubmit)="saveAnimal()">
+      <div class="animal-fields">
+        <label>
+          Name
+          <input name="animalName" [(ngModel)]="form.name" required />
+        </label>
+        <label>
+          Species
+          <input name="animalSpecies" [(ngModel)]="form.species" required />
+        </label>
+        <label>
+          Age
+          <input type="number" min="0" name="animalAge" [(ngModel)]="form.age" required />
+        </label>
+        <label>
+          Gender
+          <select name="animalGender" [(ngModel)]="form.gender" required>
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+          </select>
+        </label>
+        <label>
+          Status
+          <select
+            name="animalStatus"
+            [(ngModel)]="form.status"
+            (ngModelChange)="onStatusChange($event)"
+            required
+          >
+            <option value="FREE">Free</option>
+            <option value="IN_PROCESS">In process</option>
+            <option value="ADOPTED">Adopted</option>
+          </select>
+        </label>
+        <label>
+          Adopter
+          <input
+            name="animalAdopter"
+            [(ngModel)]="form.adopter"
+            [disabled]="form.status === 'FREE'"
+          />
+        </label>
+        <label class="wide-field">
+          Health conditions or problems
+          <textarea name="animalHealth" [(ngModel)]="form.healthDescription" rows="2"></textarea>
+        </label>
+        <label class="wide-field">
+          Character, habits and notes
+          <textarea name="animalNotes" [(ngModel)]="form.behaviorNotes" rows="2"></textarea>
+        </label>
+        <label>
+          Animal image
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            name="animalImage"
+            (change)="onImageSelected($event)"
+          />
+        </label>
+        @if (form.imageUrl) {
+          <div class="image-preview">
+            <img [src]="form.imageUrl" [alt]="form.name || 'Animal preview'" />
+          </div>
+        }
+        <button
+          class="button button-primary"
+          type="submit"
+          [disabled]="animalForm.invalid || saving"
+        >
+          {{ saving ? 'Saving...' : editingId === null ? 'Add animal' : 'Save animal' }}
+        </button>
+      </div>
+    </form>
+
+    @if (notice) {
+      <p class="feedback success" role="status">{{ notice }}</p>
     }
-  </div>
+    @if (error) {
+      <p class="feedback error" role="alert">{{ error }}</p>
+    }
 
-  <form class="animal-form" #animalForm="ngForm" (ngSubmit)="saveAnimal()">
-    <div class="animal-fields">
-      <label>
-        Name
-        <input name="animalName" [(ngModel)]="form.name" required />
-      </label>
-      <label>
-        Species
-        <input name="animalSpecies" [(ngModel)]="form.species" required />
-      </label>
-      <label>
-        Age
-        <input type="number" min="0" name="animalAge" [(ngModel)]="form.age" required />
-      </label>
-      <label>
-        Gender
-        <select name="animalGender" [(ngModel)]="form.gender" required>
-          <option value="MALE">Male</option>
-          <option value="FEMALE">Female</option>
-        </select>
-      </label>
-      <label>
-        Status
-        <select name="animalStatus" [(ngModel)]="form.status" (ngModelChange)="onStatusChange($event)" required>
-          <option value="FREE">Free</option>
-          <option value="IN_PROCESS">In process</option>
-          <option value="ADOPTED">Adopted</option>
-        </select>
-      </label>
-      <label>
-        Adopter
-        <input name="animalAdopter" [(ngModel)]="form.adopter" [disabled]="form.status === 'FREE'" />
-      </label>
-      <label class="wide-field">
-        Health conditions or problems
-        <textarea name="animalHealth" [(ngModel)]="form.healthDescription" rows="2"></textarea>
-      </label>
-      <label class="wide-field">
-        Character, habits and notes
-        <textarea name="animalNotes" [(ngModel)]="form.behaviorNotes" rows="2"></textarea>
-      </label>
-      <label>
-        Animal image
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          name="animalImage"
-          (change)="onImageSelected($event)" />
-      </label>
-      @if (form.imageUrl) {
-        <div class="image-preview">
-          <img [src]="form.imageUrl" [alt]="form.name || 'Animal preview'" />
-        </div>
-      }
-      <button class="button button-primary" type="submit" [disabled]="animalForm.invalid || saving">
-        {{ saving ? 'Saving...' : editingId === null ? 'Add animal' : 'Save animal' }}
-      </button>
-    </div>
-  </form>
-
-  @if (notice) {
-    <p class="feedback success" role="status">{{ notice }}</p>
-  }
-  @if (error) {
-    <p class="feedback error" role="alert">{{ error }}</p>
-  }
-
-  @if (loading) {
-    <p class="state">Loading animals...</p>
-  } @else {
-    <div class="animal-list">
-      @for (animal of animals; track animal.id) {
-        <article class="animal-row">
-          <div>
-            <strong>{{ animal.name }}</strong>
-            <span class="animal-summary">{{ animal.species }} · {{ animal.age }} years · {{ animal.gender }}</span>
-            <span class="status">{{ animal.status }}</span>
-          </div>
-          <div class="row-actions">
-            <a class="button button-secondary" [routerLink]="['/organizations', organizationId, 'animals', animal.id]">View details</a>
-          </div>
-        </article>
-      } @empty {
-        <p class="state">No animals registered for this organization.</p>
-      }
-    </div>
-  }
-</section>
+    @if (loading) {
+      <p class="state">Loading animals...</p>
+    } @else {
+      <div class="animal-list">
+        @for (animal of animals; track animal.id) {
+          <article class="animal-row">
+            <div>
+              <strong>{{ animal.name }}</strong>
+              <span class="animal-summary"
+                >{{ animal.species }} · {{ animal.age }} years · {{ animal.gender }}</span
+              >
+              <span class="status">{{ animal.status }}</span>
+            </div>
+            <div class="row-actions">
+              <a
+                class="button button-secondary"
+                [routerLink]="['/organizations', organizationId, 'animals', animal.id]"
+                >View details</a
+              >
+            </div>
+          </article>
+        } @empty {
+          <p class="state">No animals registered for this organization.</p>
+        }
+      </div>
+    }
+  </section>
 </main>

@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import {
   Organization,
   OrganizationApiService,
-  OrganizationRequest
+  OrganizationRequest,
 } from '../../services/organization-api.service';
 
 interface OrganizationForm extends OrganizationRequest {
@@ -17,7 +17,7 @@ interface OrganizationForm extends OrganizationRequest {
   selector: 'app-organization-management',
   imports: [FormsModule, RouterLink],
   templateUrl: 'organization-management.component.html',
-  styleUrl: 'organization-management.component.css'
+  styleUrl: 'organization-management.component.css',
 })
 export class OrganizationManagementComponent implements OnInit {
   private readonly organizationApi = inject(OrganizationApiService);
@@ -56,28 +56,31 @@ export class OrganizationManagementComponent implements OnInit {
 
     this.saving = true;
     const { adminPasswordConfirm, ...request } = this.form;
-    const operation = this.editingId === null
-      ? this.organizationApi.createOrganization(request)
-      : this.organizationApi.updateOrganization(this.editingId, request);
+    const operation =
+      this.editingId === null
+        ? this.organizationApi.createOrganization(request)
+        : this.organizationApi.updateOrganization(this.editingId, request);
 
     operation.subscribe({
       next: () => {
-        this.notice = this.editingId === null
-          ? 'Organization created successfully.'
-          : 'Organization updated successfully.';
+        this.notice =
+          this.editingId === null
+            ? 'Organization created successfully.'
+            : 'Organization updated successfully.';
         this.resetForm();
         this.loadOrganizations();
       },
       error: (response) => {
         const backendMessage = response.error?.detail || response.error?.message || '';
-        const duplicateEmail = /email.*(already|exists)|already.*email|registered.*email/i.test(backendMessage)
-          || response.status === 409;
+        const duplicateEmail =
+          /email.*(already|exists)|already.*email|registered.*email/i.test(backendMessage) ||
+          response.status === 409;
 
         this.error = duplicateEmail
           ? 'This administrator email is already registered. Please use a different email address.'
           : backendMessage || 'The organization could not be saved.';
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -94,7 +97,7 @@ export class OrganizationManagementComponent implements OnInit {
       adminEmail: organization.admin.email,
       adminPhone: organization.admin.phone,
       adminPassword: '',
-      adminPasswordConfirm: ''
+      adminPasswordConfirm: '',
     };
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -112,7 +115,7 @@ export class OrganizationManagementComponent implements OnInit {
       },
       error: () => {
         this.error = 'The organization could not be deleted.';
-      }
+      },
     });
   }
 
@@ -132,10 +135,12 @@ export class OrganizationManagementComponent implements OnInit {
   private loadOrganizations(): void {
     this.loading = true;
     const user = this.auth.currentUser();
-    const organizationsRequest: Observable<Organization[]> = this.isOrganizationScoped && user?.organizationId
-      ? this.organizationApi.getOrganization(user.organizationId)
-          .pipe(map((organization) => [organization]))
-      : this.organizationApi.getOrganizations();
+    const organizationsRequest: Observable<Organization[]> =
+      this.isOrganizationScoped && user?.organizationId
+        ? this.organizationApi
+            .getOrganization(user.organizationId)
+            .pipe(map((organization) => [organization]))
+        : this.organizationApi.getOrganizations();
 
     organizationsRequest.subscribe({
       next: (organizations) => {
@@ -146,7 +151,7 @@ export class OrganizationManagementComponent implements OnInit {
         this.error = 'The API is unavailable. Start the Spring Boot service on port 8080.';
         this.loading = false;
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -171,7 +176,7 @@ export class OrganizationManagementComponent implements OnInit {
       adminEmail: '',
       adminPhone: '',
       adminPassword: '',
-      adminPasswordConfirm: ''
+      adminPasswordConfirm: '',
     };
   }
 }

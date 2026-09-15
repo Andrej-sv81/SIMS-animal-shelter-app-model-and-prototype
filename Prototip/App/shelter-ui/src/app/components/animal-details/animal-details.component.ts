@@ -7,7 +7,7 @@ import { Animal, AnimalApiService, AnimalRequest } from '../../services/animal-a
   selector: 'app-animal-details',
   imports: [FormsModule, RouterLink],
   templateUrl: './animal-details.component.html',
-  styleUrl: './animal-details.component.css'
+  styleUrl: './animal-details.component.css',
 })
 export class AnimalDetailsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -68,27 +68,29 @@ export class AnimalDetailsComponent implements OnInit {
   protected saveAnimal(): void {
     this.clearMessages();
     this.saving = true;
-    this.animalApi.updateAnimal(this.organizationId, this.animalId, this.form, this.selectedFiles).subscribe({
-      next: (animal) => {
-        this.animal = animal;
-        this.form = this.toRequest(animal);
-        this.editing = false;
-        this.selectedFiles = [];
-        this.saving = false;
-        this.notice = 'Animal updated successfully.';
-      },
-      error: () => {
-        this.error = 'The animal could not be updated.';
-        this.saving = false;
-      }
-    });
+    this.animalApi
+      .updateAnimal(this.organizationId, this.animalId, this.form, this.selectedFiles)
+      .subscribe({
+        next: (animal) => {
+          this.animal = animal;
+          this.form = this.toRequest(animal);
+          this.editing = false;
+          this.selectedFiles = [];
+          this.saving = false;
+          this.notice = 'Animal updated successfully.';
+        },
+        error: () => {
+          this.error = 'The animal could not be updated.';
+          this.saving = false;
+        },
+      });
   }
 
   protected removeAnimal(): void {
     if (!this.animal || !window.confirm(`Delete ${this.animal.name}?`)) return;
     this.animalApi.deleteAnimal(this.organizationId, this.animalId).subscribe({
       next: () => this.router.navigate(['/organizations', this.organizationId]),
-      error: () => this.error = 'The animal could not be deleted.'
+      error: () => (this.error = 'The animal could not be deleted.'),
     });
   }
 
@@ -102,7 +104,7 @@ export class AnimalDetailsComponent implements OnInit {
         this.form = this.toRequest(this.animal);
         this.notice = 'Image removed successfully.';
       },
-      error: () => this.error = 'The image could not be removed.'
+      error: () => (this.error = 'The image could not be removed.'),
     });
   }
 
@@ -112,7 +114,11 @@ export class AnimalDetailsComponent implements OnInit {
 
   protected imageUrls(): string[] {
     if (!this.animal) return [];
-    return this.animal.imageUrls?.length ? this.animal.imageUrls : (this.animal.imageUrl ? [this.animal.imageUrl] : []);
+    return this.animal.imageUrls?.length
+      ? this.animal.imageUrls
+      : this.animal.imageUrl
+        ? [this.animal.imageUrl]
+        : [];
   }
 
   protected statusLabel(status: string): string {
@@ -133,7 +139,7 @@ export class AnimalDetailsComponent implements OnInit {
       error: () => {
         this.error = 'The animal could not be loaded.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -147,14 +153,21 @@ export class AnimalDetailsComponent implements OnInit {
       behaviorNotes: animal.behaviorNotes || '',
       status: animal.status,
       imageUrl: animal.imageUrl || '',
-      adopter: animal.adopter || ''
+      adopter: animal.adopter || '',
     };
   }
 
   private emptyForm(): AnimalRequest {
     return {
-      name: '', species: '', age: 0, gender: 'MALE', healthDescription: '',
-      behaviorNotes: '', status: 'FREE', imageUrl: '', adopter: ''
+      name: '',
+      species: '',
+      age: 0,
+      gender: 'MALE',
+      healthDescription: '',
+      behaviorNotes: '',
+      status: 'FREE',
+      imageUrl: '',
+      adopter: '',
     };
   }
 

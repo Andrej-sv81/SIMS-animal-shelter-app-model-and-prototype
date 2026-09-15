@@ -7,14 +7,26 @@
     <header>
       <p class="eyebrow">Animal details</p>
       <h1>{{ animal.name }}</h1>
-      <p>{{ animal.species }} · {{ animal.age }} years · {{ animal.gender }} · {{ animal.status }}</p>
+      <p>
+        {{ animal.species }} · {{ animal.age }} years · {{ animal.gender }} · {{ animal.status }}
+      </p>
     </header>
 
     <section class="data-grid">
-      <div><span>Organization</span><strong>{{ animal.organizationName }}</strong></div>
-      <div><span>Adopter</span><strong>{{ animal.adopter || 'Not provided' }}</strong></div>
-      <div class="wide"><span>Health</span><p>{{ animal.healthDescription || 'No health information provided.' }}</p></div>
-      <div class="wide"><span>Character and notes</span><p>{{ animal.behaviorNotes || 'No additional notes provided.' }}</p></div>
+      <div>
+        <span>Organization</span><strong>{{ animal.organizationName }}</strong>
+      </div>
+      <div>
+        <span>Adopter</span><strong>{{ animal.adopter || 'Not provided' }}</strong>
+      </div>
+      <div class="wide">
+        <span>Health</span>
+        <p>{{ animal.healthDescription || 'No health information provided.' }}</p>
+      </div>
+      <div class="wide">
+        <span>Character and notes</span>
+        <p>{{ animal.behaviorNotes || 'No additional notes provided.' }}</p>
+      </div>
     </section>
 
     <div class="actions">
@@ -36,7 +48,14 @@
     @if (donationOpen) {
       <form class="action-form" (ngSubmit)="submitDonation()">
         <h2>Donation</h2>
-        <input type="number" min="1" name="amount" [(ngModel)]="donation.amount" placeholder="Amount" required />
+        <input
+          type="number"
+          min="1"
+          name="amount"
+          [(ngModel)]="donation.amount"
+          placeholder="Amount"
+          required
+        />
         <select name="type" [(ngModel)]="donation.type">
           <option value="MONEY">Animal</option>
           <option value="FOOD">Organization</option>

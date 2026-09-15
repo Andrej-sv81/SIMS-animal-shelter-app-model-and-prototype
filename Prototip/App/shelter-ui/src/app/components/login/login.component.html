@@ -15,7 +15,13 @@
       </label>
       <label>
         Password
-        <input type="password" name="password" [(ngModel)]="password" required autocomplete="current-password" />
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          autocomplete="current-password"
+        />
       </label>
       <button class="button button-primary" type="submit" [disabled]="loginForm.invalid || loading">
         {{ loading ? 'Signing in...' : 'Sign in' }}

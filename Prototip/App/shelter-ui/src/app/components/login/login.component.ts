@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   imports: [FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   private readonly auth = inject(AuthService);
@@ -24,9 +24,10 @@ export class LoginComponent {
     this.auth.login(this.email, this.password).subscribe({
       next: () => this.router.navigate(['/organizations']),
       error: (response) => {
-        this.error = response.error?.detail || response.error?.message || 'Invalid email or password.';
+        this.error =
+          response.error?.detail || response.error?.message || 'Invalid email or password.';
         this.loading = false;
-      }
+      },
     });
   }
 }

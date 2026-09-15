@@ -1,18 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import {
-  Animal,
-  AnimalApiService,
-  AnimalRequest
-} from '../../services/animal-api.service';
+import { Animal, AnimalApiService, AnimalRequest } from '../../services/animal-api.service';
 import { Organization, OrganizationApiService } from '../../services/organization-api.service';
 
 @Component({
   selector: 'app-animal-management',
   imports: [FormsModule, RouterLink],
   templateUrl: './animal-management.component.html',
-  styleUrl: './animal-management.component.css'
+  styleUrl: './animal-management.component.css',
 })
 export class AnimalManagementComponent implements OnInit {
   protected organizationId = 0;
@@ -46,14 +42,16 @@ export class AnimalManagementComponent implements OnInit {
       error: () => {
         this.error = 'The organization could not be loaded.';
         this.loading = false;
-      }
+      },
     });
   }
 
   protected onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedFiles = Array.from(input.files ?? []);
-    this.form.imageUrl = this.selectedFiles[0] ? URL.createObjectURL(this.selectedFiles[0]) : this.form.imageUrl;
+    this.form.imageUrl = this.selectedFiles[0]
+      ? URL.createObjectURL(this.selectedFiles[0])
+      : this.form.imageUrl;
   }
 
   protected onStatusChange(status: string): void {
@@ -75,25 +73,32 @@ export class AnimalManagementComponent implements OnInit {
       behaviorNotes: this.form.behaviorNotes,
       status: this.form.status,
       adopter: this.form.adopter,
-      imageUrl: this.selectedFiles[0] ? URL.createObjectURL(this.selectedFiles[0]) : this.form.imageUrl
+      imageUrl: this.selectedFiles[0]
+        ? URL.createObjectURL(this.selectedFiles[0])
+        : this.form.imageUrl,
     };
 
-    const operation = this.editingId === null
-      ? this.animalApi.createAnimal(this.organizationId, request, this.selectedFiles)
-      : this.animalApi.updateAnimal(this.organizationId, this.editingId, request, this.selectedFiles);
+    const operation =
+      this.editingId === null
+        ? this.animalApi.createAnimal(this.organizationId, request, this.selectedFiles)
+        : this.animalApi.updateAnimal(
+            this.organizationId,
+            this.editingId,
+            request,
+            this.selectedFiles,
+          );
 
     operation.subscribe({
       next: () => {
-        this.notice = this.editingId === null
-          ? 'Animal created successfully.'
-          : 'Animal updated successfully.';
+        this.notice =
+          this.editingId === null ? 'Animal created successfully.' : 'Animal updated successfully.';
         this.resetForm();
         this.loadAnimals();
       },
       error: () => {
         this.error = 'The animal could not be saved.';
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -109,7 +114,7 @@ export class AnimalManagementComponent implements OnInit {
       behaviorNotes: animal.behaviorNotes,
       adopter: animal.adopter,
       status: animal.status,
-      imageUrl: animal.imageUrl
+      imageUrl: animal.imageUrl,
     };
   }
 
@@ -126,7 +131,7 @@ export class AnimalManagementComponent implements OnInit {
       },
       error: () => {
         this.error = 'The animal could not be deleted.';
-      }
+      },
     });
   }
 
@@ -145,7 +150,7 @@ export class AnimalManagementComponent implements OnInit {
       error: () => {
         this.error = 'Animals could not be loaded.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -171,7 +176,7 @@ export class AnimalManagementComponent implements OnInit {
       behaviorNotes: '',
       status: 'FREE',
       imageUrl: '',
-      adopter: ''
+      adopter: '',
     };
   }
 }

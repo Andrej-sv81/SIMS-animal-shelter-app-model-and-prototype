@@ -44,7 +44,11 @@ export class AnimalApiService {
     return this.http.get<Animal[]>('http://localhost:8080/api/animals');
   }
 
-  createAnimal(organizationId: number, request: AnimalRequest, imageFiles: File[] = []): Observable<Animal> {
+  createAnimal(
+    organizationId: number,
+    request: AnimalRequest,
+    imageFiles: File[] = [],
+  ): Observable<Animal> {
     const formData = new FormData();
     formData.append('name', request.name);
     formData.append('species', request.species);
@@ -60,7 +64,12 @@ export class AnimalApiService {
     return this.http.post<Animal>(`${this.apiUrl}/${organizationId}/animals`, formData);
   }
 
-  updateAnimal(organizationId: number, animalId: number, request: AnimalRequest, imageFiles: File[] = []): Observable<Animal> {
+  updateAnimal(
+    organizationId: number,
+    animalId: number,
+    request: AnimalRequest,
+    imageFiles: File[] = [],
+  ): Observable<Animal> {
     const formData = new FormData();
     formData.append('name', request.name);
     formData.append('species', request.species);
@@ -86,6 +95,8 @@ export class AnimalApiService {
 
   deleteAnimalImage(organizationId: number, animalId: number, imageUrl: string): Observable<void> {
     const params = new HttpParams().set('imageUrl', imageUrl);
-    return this.http.delete<void>(`${this.apiUrl}/${organizationId}/animals/${animalId}/images`, { params });
+    return this.http.delete<void>(`${this.apiUrl}/${organizationId}/animals/${animalId}/images`, {
+      params,
+    });
   }
 }
