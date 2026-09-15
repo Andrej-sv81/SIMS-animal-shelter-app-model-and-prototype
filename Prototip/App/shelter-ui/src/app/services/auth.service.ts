@@ -17,7 +17,7 @@ export interface LoginResponse {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly apiUrl = 'http://localhost:8080/api/auth';
+  private readonly apiUrl = '/api/auth';
   private readonly storageKey = 'shelter-auth-user';
 
   login(email: string, password: string): Observable<LoginResponse> {

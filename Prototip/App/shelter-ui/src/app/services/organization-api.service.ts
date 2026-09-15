@@ -34,7 +34,7 @@ export interface OrganizationRequest {
 @Injectable({ providedIn: 'root' })
 export class OrganizationApiService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/api/organizations';
+  private readonly apiUrl = '/api/organizations';
 
   getOrganizations(): Observable<Organization[]> {
     return this.http.get<Organization[]>(this.apiUrl);

@@ -7,8 +7,8 @@ services:
       POSTGRES_PASSWORD: shelter
     ports:
       - "5432:5432"
-    # volumes:
-    #   - shelter-postgres-data:/var/lib/postgresql/data
+    volumes:
+      - shelter-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U shelter -d shelterdb"]
       interval: 5s
@@ -23,9 +23,19 @@ services:
       SPRING_DATASOURCE_PASSWORD: shelter
     ports:
       - "8080:8080"
+    volumes:
+      - shelter-uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
 
-# volumes:
-#   shelter-postgres-data:
+  frontend:
+    build: ./shelter-ui
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  shelter-postgres-data:
+  shelter-uploads:

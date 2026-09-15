@@ -34,14 +34,14 @@ export interface AnimalRequest {
 @Injectable({ providedIn: 'root' })
 export class AnimalApiService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/api/organizations';
+  private readonly apiUrl = '/api/organizations';
 
   getAnimals(organizationId: number): Observable<Animal[]> {
     return this.http.get<Animal[]>(`${this.apiUrl}/${organizationId}/animals`);
   }
 
   getAllAnimals(): Observable<Animal[]> {
-    return this.http.get<Animal[]>('http://localhost:8080/api/animals');
+    return this.http.get<Animal[]>('/api/animals');
   }
 
   createAnimal(

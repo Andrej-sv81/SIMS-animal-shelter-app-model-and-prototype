@@ -149,6 +149,13 @@ public class AnimalService {
     }
 
     private AnimalDto toDto(Animal animal) {
+        List<String> imageUrls = animal.getImageUrls().isEmpty()
+            ? (animal.getImageUrl() == null || animal.getImageUrl().isBlank() ? List.of() : List.of(animal.getImageUrl()))
+            : animal.getImageUrls();
+        List<String> publicImageUrls = imageUrls.stream()
+            .map(this::normalizeImageUrl)
+            .collect(Collectors.toList());
+
         return new AnimalDto(
             animal.getId(),
             animal.getName(),
@@ -158,12 +165,8 @@ public class AnimalService {
             animal.getHealthDescription(),
             animal.getBehaviorNotes(),
             animal.getStatus(),
-            firstImage(animal.getImageUrls().isEmpty()
-                ? List.of(animal.getImageUrl() == null ? "" : animal.getImageUrl())
-                : animal.getImageUrls()),
-            animal.getImageUrls().isEmpty()
-                ? (animal.getImageUrl() == null || animal.getImageUrl().isBlank() ? List.of() : List.of(animal.getImageUrl()))
-                : animal.getImageUrls(),
+            firstImage(publicImageUrls),
+            publicImageUrls,
             animal.getAdopter(),
             animal.getOrganization().getId(),
             animal.getOrganization().getName()
@@ -187,7 +190,7 @@ public class AnimalService {
                 try (InputStream input = image.getInputStream()) {
                     Files.copy(input, target, StandardCopyOption.REPLACE_EXISTING);
                 }
-                imageUrls.add("http://localhost:8080/uploads/animals/" + fileName);
+                imageUrls.add("/uploads/animals/" + fileName);
             }
             return imageUrls;
         } catch (IOException e) {
@@ -201,6 +204,12 @@ public class AnimalService {
 
     private String firstImage(List<String> imageUrls) {
         return imageUrls == null || imageUrls.isEmpty() ? "" : imageUrls.get(0);
+    }
+
+    private String normalizeImageUrl(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) return "";
+        int uploadsIndex = imageUrl.indexOf("/uploads/");
+        return uploadsIndex >= 0 ? imageUrl.substring(uploadsIndex) : imageUrl;
     }
 
     private void deleteStoredImage(String imageUrl) {

@@ -25,7 +25,7 @@ export interface VolunteerRequest {
 @Injectable({ providedIn: 'root' })
 export class VolunteerApiService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/api/organizations';
+  private readonly apiUrl = '/api/organizations';
 
   getVolunteers(organizationId: number): Observable<Volunteer[]> {
     return this.http.get<Volunteer[]>(`${this.apiUrl}/${organizationId}/volunteers`);
