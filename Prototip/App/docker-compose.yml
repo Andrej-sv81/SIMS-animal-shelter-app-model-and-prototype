@@ -7,8 +7,8 @@ services:
       POSTGRES_PASSWORD: shelter
     ports:
       - "5432:5432"
-    volumes:
-      - shelter-postgres-data:/var/lib/postgresql/data
+    # volumes:
+    #   - shelter-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U shelter -d shelterdb"]
       interval: 5s
@@ -27,5 +27,5 @@ services:
       db:
         condition: service_healthy
 
-volumes:
-  shelter-postgres-data:
+# volumes:
+#   shelter-postgres-data:

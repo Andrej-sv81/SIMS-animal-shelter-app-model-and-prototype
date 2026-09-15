@@ -8,6 +8,8 @@ export interface Admin {
   lastName: string;
   email: string;
   phone: string;
+  active: boolean;
+  joinedAt: string | null;
 }
 
 export interface Organization {
@@ -40,6 +42,10 @@ export class OrganizationApiService {
 
   getOrganization(id: number): Observable<Organization> {
     return this.http.get<Organization>(`${this.apiUrl}/${id}`);
+  }
+
+  getOrganizationForAdmin(adminId: number): Observable<Organization> {
+    return this.http.get<Organization>(`${this.apiUrl}/mine/${adminId}`);
   }
 
   createOrganization(request: OrganizationRequest): Observable<Organization> {

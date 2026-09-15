@@ -1,10 +1,11 @@
 <main class="page-shell">
   <header class="hero">
-    <p class="eyebrow">Shelter administration</p>
-    <h1>Organizations, ready for care.</h1>
-    <p class="intro">Use this workspace to test organization CRUD and create the first administrator for each organization.</p>
+    <p class="eyebrow">{{ isSuperAdmin ? 'Shelter administration' : 'Organization workspace' }}</p>
+    <h1>{{ isSuperAdmin ? 'Organizations, ready for care.' : isOrganizationScoped ? 'Your organization.' : 'Organization workspace.' }}</h1>
+    <p class="intro">{{ isSuperAdmin ? 'Use this workspace to manage organizations and their administrators.' : 'Manage your organization and its registered animals.' }}</p>
   </header>
 
+  @if (isSuperAdmin) {
   <section class="workspace" aria-label="Organization management">
     <div class="workspace-layout">
       <aside class="vertical-menu">
@@ -93,6 +94,7 @@
       }
     </div>
   </section>
+  }
 
   @if (notice) {
     <p class="feedback success" role="status">{{ notice }}</p>

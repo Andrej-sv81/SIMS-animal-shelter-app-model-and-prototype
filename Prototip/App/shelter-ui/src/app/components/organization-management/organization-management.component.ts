@@ -1,6 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Observable, map } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 import {
   Organization,
   OrganizationApiService,
@@ -19,6 +21,7 @@ interface OrganizationForm extends OrganizationRequest {
 })
 export class OrganizationManagementComponent implements OnInit {
   private readonly organizationApi = inject(OrganizationApiService);
+  private readonly auth = inject(AuthService);
   protected organizations: Organization[] = [];
   protected form: OrganizationForm = this.emptyForm();
   protected editingId: number | null = null;
@@ -27,6 +30,18 @@ export class OrganizationManagementComponent implements OnInit {
   protected error = '';
   protected notice = '';
   protected saving = false;
+
+  protected get isSuperAdmin(): boolean {
+    return this.auth.currentUser()?.role === 'SUPER_ADMIN';
+  }
+
+  protected get isOrganizationAdmin(): boolean {
+    return this.auth.currentUser()?.role === 'ORGANIZATION_ADMIN';
+  }
+
+  protected get isOrganizationScoped(): boolean {
+    return this.auth.isOrganizationScoped();
+  }
 
   ngOnInit(): void {
     this.loadOrganizations();
@@ -116,7 +131,13 @@ export class OrganizationManagementComponent implements OnInit {
 
   private loadOrganizations(): void {
     this.loading = true;
-    this.organizationApi.getOrganizations().subscribe({
+    const user = this.auth.currentUser();
+    const organizationsRequest: Observable<Organization[]> = this.isOrganizationScoped && user?.organizationId
+      ? this.organizationApi.getOrganization(user.organizationId)
+          .pipe(map((organization) => [organization]))
+      : this.organizationApi.getOrganizations();
+
+    organizationsRequest.subscribe({
       next: (organizations) => {
         this.organizations = organizations;
         this.loading = false;

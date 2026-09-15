@@ -36,6 +36,11 @@ public class OrganizationController {
         return organizationService.getOrganization(id);
     }
 
+    @GetMapping("/mine/{adminId}")
+    public OrganizationDto getOrganizationForAdmin(@PathVariable Long adminId) {
+        return organizationService.getOrganizationForAdmin(adminId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public OrganizationDto createOrganization(@RequestBody OrganizationRequestDto request) {

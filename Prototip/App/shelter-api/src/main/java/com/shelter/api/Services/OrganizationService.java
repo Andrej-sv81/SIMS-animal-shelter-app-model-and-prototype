@@ -37,16 +37,23 @@ public class OrganizationService {
         return toDto(findOrganization(id));
     }
 
+    public OrganizationDto getOrganizationForAdmin(Long adminId) {
+        Organization organization = organizationRepository.findByAdminId(adminId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Organization not found for administrator"));
+        return toDto(organization);
+    }
+
     public OrganizationDto createOrganization(OrganizationRequestDto request) {
         validateRequest(request);
-        if (userRepository.existsByEmail(request.adminEmail())) {
+        String adminEmail = normalizeEmail(request.adminEmail());
+        if (userRepository.existsByEmail(adminEmail)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "This administrator email is already registered. Please use a different email address.");
         }
 
         User admin = new User(
             request.adminFirstName(),
             request.adminLastName(),
-            request.adminEmail(),
+            adminEmail,
             request.adminPhone(),
             passwordEncoder.encode(request.adminPassword()),
             ADMIN_ROLE
@@ -57,6 +64,7 @@ public class OrganizationService {
             request.bankAccount(),
             admin
         );
+        admin.setOrganization(organization);
         return toDto(organizationRepository.save(organization));
     }
 
@@ -65,8 +73,9 @@ public class OrganizationService {
         String newPassword = request.adminPassword() == null ? null : request.adminPassword().trim();
         Organization organization = findOrganization(id);
         User admin = organization.getAdmin();
+        String adminEmail = normalizeEmail(request.adminEmail());
 
-        if (!admin.getEmail().equals(request.adminEmail()) && userRepository.existsByEmail(request.adminEmail())) {
+        if (!admin.getEmail().equals(adminEmail) && userRepository.existsByEmail(adminEmail)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "This administrator email is already registered. Please use a different email address.");
         }
 
@@ -75,7 +84,7 @@ public class OrganizationService {
         organization.setBankAccount(request.bankAccount());
         admin.setFirstName(request.adminFirstName());
         admin.setLastName(request.adminLastName());
-        admin.setEmail(request.adminEmail());
+        admin.setEmail(adminEmail);
         admin.setPhone(request.adminPhone());
         if (newPassword != null && !newPassword.isBlank()) {
             admin.setPasswordHash(passwordEncoder.encode(newPassword));
@@ -112,6 +121,10 @@ public class OrganizationService {
         }
     }
 
+    private String normalizeEmail(String email) {
+        return email.trim().toLowerCase();
+    }
+
     private OrganizationDto toDto(Organization organization) {
         User admin = organization.getAdmin();
         AdminDto adminDto = new AdminDto(
@@ -119,7 +132,9 @@ public class OrganizationService {
             admin.getFirstName(),
             admin.getLastName(),
             admin.getEmail(),
-            admin.getPhone()
+            admin.getPhone(),
+            admin.isActive(),
+            admin.getJoinedAt()
         );
         return new OrganizationDto(
             organization.getId(),

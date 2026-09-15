@@ -1,0 +1,57 @@
+<main class="detail-page">
+  <a class="back" routerLink="/browse/animals">Back to all animals</a>
+
+  @if (loading) {
+    <p>Loading animal...</p>
+  } @else if (animal) {
+    <header>
+      <p class="eyebrow">Animal details</p>
+      <h1>{{ animal.name }}</h1>
+      <p>{{ animal.species }} · {{ animal.age }} years · {{ animal.gender }} · {{ animal.status }}</p>
+    </header>
+
+    <section class="data-grid">
+      <div><span>Organization</span><strong>{{ animal.organizationName }}</strong></div>
+      <div><span>Adopter</span><strong>{{ animal.adopter || 'Not provided' }}</strong></div>
+      <div class="wide"><span>Health</span><p>{{ animal.healthDescription || 'No health information provided.' }}</p></div>
+      <div class="wide"><span>Character and notes</span><p>{{ animal.behaviorNotes || 'No additional notes provided.' }}</p></div>
+    </section>
+
+    <div class="actions">
+      <button type="button" (click)="adoptionOpen = !adoptionOpen">Adopt</button>
+      <button type="button" (click)="donationOpen = !donationOpen">Donate</button>
+    </div>
+
+    @if (adoptionOpen) {
+      <form class="action-form" (ngSubmit)="submitAdoption()">
+        <h2>Adoption request</h2>
+        <input name="firstName" [(ngModel)]="adopter.firstName" placeholder="First name" required />
+        <input name="lastName" [(ngModel)]="adopter.lastName" placeholder="Last name" required />
+        <input name="phone" [(ngModel)]="adopter.phone" placeholder="Phone" required />
+        <input type="email" name="email" [(ngModel)]="adopter.email" placeholder="Email" required />
+        <button type="submit">Send request</button>
+      </form>
+    }
+
+    @if (donationOpen) {
+      <form class="action-form" (ngSubmit)="submitDonation()">
+        <h2>Donation</h2>
+        <input type="number" min="1" name="amount" [(ngModel)]="donation.amount" placeholder="Amount" required />
+        <select name="type" [(ngModel)]="donation.type">
+          <option value="MONEY">Animal</option>
+          <option value="FOOD">Organization</option>
+          <option value="OTHER">Other</option>
+        </select>
+        <button type="submit">Continue donation</button>
+      </form>
+    }
+
+    <section class="gallery">
+      @for (imageUrl of imageUrls(); track imageUrl) {
+        <img [src]="image(imageUrl)" [alt]="animal.name" />
+      }
+    </section>
+  } @else {
+    <p class="error">{{ error || 'Animal not found.' }}</p>
+  }
+</main>

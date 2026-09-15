@@ -15,7 +15,7 @@
     @if (notice) { <p class="feedback success" role="status">{{ notice }}</p> }
     @if (error) { <p class="feedback error" role="alert">{{ error }}</p> }
 
-    @if (editing) {
+    @if (editing && canManageOrganization) {
       <form class="edit-form" #organizationForm="ngForm" (ngSubmit)="saveOrganization()">
         <h2>Edit organization</h2>
         <div class="field-grid">
@@ -33,7 +33,9 @@
           }
         </div>
         <div class="form-actions">
-          <button class="button button-danger" type="button" (click)="removeOrganization()">Delete organization</button>
+          @if (canDeleteOrganization) {
+            <button class="button button-danger" type="button" (click)="removeOrganization()">Delete organization</button>
+          }
           <button class="button button-quiet" type="button" (click)="cancelEditing()">Cancel</button>
           <button class="button button-primary" type="submit" [disabled]="organizationForm.invalid || saving">{{ saving ? 'Saving...' : 'Save changes' }}</button>
         </div>
@@ -45,16 +47,24 @@
       <div class="summary-row-1"><span>Administrator</span><strong>{{ organization.admin.firstName }} {{ organization.admin.lastName }}</strong></div>
       <div class="summary-row-2"><span>Email</span><strong>{{ organization.admin.email }}</strong></div>
       <div class="summary-row-2"><span>Phone</span><strong>{{ organization.admin.phone || 'Not provided' }}</strong></div>
+      <div class="summary-row-2"><span>Account status</span><strong>{{ organization.admin.active ? 'Active' : 'Inactive' }}</strong></div>
+      <div class="summary-row-2"><span>Joined organization</span><strong>{{ organization.admin.joinedAt || 'Not provided' }}</strong></div>
     </section>
 
     <div class="organization-toolbar" aria-label="Organization actions">
+      @if (canManageOrganization) {
       <button class="menu-tab" type="button" (click)="startEditing()">
         <span>Manage organization</span>
         <small>Edit details and update administrator information.</small>
       </button>
+      }
       <a class="menu-tab" [routerLink]="['/organizations', organization.id, 'animals']">
         <span>Manage animals</span>
         <small>Review, add, edit and remove animals for this organization.</small>
+      </a>
+      <a class="menu-tab" [routerLink]="['/organizations', organization.id, 'volunteers']">
+        <span>Manage volunteers</span>
+        <small>Register volunteers for this organization.</small>
       </a>
     </div>
 

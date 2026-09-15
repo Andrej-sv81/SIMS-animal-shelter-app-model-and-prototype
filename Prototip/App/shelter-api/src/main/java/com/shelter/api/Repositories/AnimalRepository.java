@@ -6,6 +6,7 @@ import com.shelter.api.Models.Animal;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AnimalRepository extends JpaRepository<Animal, Long> {
+	List<Animal> findAll();
 	List<Animal> findAllByOrganizationId(Long organizationId);
 
 	Optional<Animal> findByIdAndOrganizationId(Long id, Long organizationId);

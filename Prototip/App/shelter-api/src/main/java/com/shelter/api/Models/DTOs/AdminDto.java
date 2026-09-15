@@ -1,4 +1,14 @@
 package com.shelter.api.Models.DTOs;
 
-public record AdminDto(Long id, String firstName, String lastName, String email, String phone) {
+import java.time.LocalDateTime;
+
+public record AdminDto(
+	Long id,
+	String firstName,
+	String lastName,
+	String email,
+	String phone,
+	boolean active,
+	LocalDateTime joinedAt
+) {
 }

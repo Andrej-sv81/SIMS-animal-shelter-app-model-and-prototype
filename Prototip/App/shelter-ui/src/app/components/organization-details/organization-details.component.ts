@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Animal, AnimalApiService } from '../../services/animal-api.service';
+import { AuthService } from '../../services/auth.service';
 import {
   Organization,
   OrganizationApiService,
@@ -23,6 +24,7 @@ export class OrganizationDetailsComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly organizationApi = inject(OrganizationApiService);
   private readonly animalApi = inject(AnimalApiService);
+  private readonly auth = inject(AuthService);
 
   protected organization: Organization | null = null;
   protected animals: Animal[] = [];
@@ -32,6 +34,12 @@ export class OrganizationDetailsComponent implements OnInit {
   protected saving = false;
   protected error = '';
   protected notice = '';
+  protected get canManageOrganization(): boolean {
+    return this.auth.isSuperAdmin() || this.auth.currentUser()?.role === 'ORGANIZATION_ADMIN';
+  }
+  protected get canDeleteOrganization(): boolean {
+    return this.auth.isSuperAdmin();
+  }
   private organizationId = 0;
 
   ngOnInit(): void {

@@ -41,6 +41,13 @@ public class AnimalService {
     }
 
     @Transactional(readOnly = true)
+    public List<AnimalDto> getAllAnimals() {
+        return animalRepository.findAll().stream()
+            .map(this::toDto)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public AnimalDto getAnimal(Long organizationId, Long id) {
         return toDto(findAnimal(organizationId, id));
     }

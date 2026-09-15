@@ -1,1 +1,17 @@
+<nav class="app-navbar" aria-label="Main navigation">
+	<a class="app-brand" routerLink="/browse/organizations">Shelter directory</a>
+	<div class="app-nav-links">
+		<a routerLink="/browse/organizations" routerLinkActive="active-public-link" [routerLinkActiveOptions]="{ exact: false }">Organizations</a>
+		<a routerLink="/browse/animals" routerLinkActive="active-public-link" [routerLinkActiveOptions]="{ exact: false }">All animals</a>
+		@if (auth.isLoggedIn()) {
+			<a routerLink="/organizations">Workspace</a>
+			@if (auth.currentUser(); as user) {
+				<span class="app-user">{{ user.firstName }} {{ user.lastName }}</span>
+			}
+			<button type="button" class="logout-button" (click)="auth.logout()">Log out</button>
+		} @else {
+			<a routerLink="/login">Login</a>
+		}
+	</div>
+</nav>
 <router-outlet />

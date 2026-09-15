@@ -1,0 +1,44 @@
+<main class="volunteer-page">
+  <a class="button button-back" [routerLink]="['/organizations', organizationId]">Back to organization</a>
+  @if (organization) {
+    <header class="page-heading">
+      <p class="eyebrow">Organization workspace</p>
+      <h1>{{ organization.name }}</h1>
+      <p class="intro">Register and manage volunteers for this organization.</p>
+    </header>
+  }
+
+  <section class="volunteer-section">
+    <div class="section-heading"><div><p class="eyebrow">Volunteers</p><h2>{{ canManageVolunteers ? 'Register volunteer' : 'Organization volunteers' }}</h2></div></div>
+    @if (canManageVolunteers) {
+    <form class="volunteer-form" #volunteerForm="ngForm" (ngSubmit)="saveVolunteer()">
+      <div class="field-grid">
+        <label>First name<input name="firstName" [(ngModel)]="form.firstName" required /></label>
+        <label>Last name<input name="lastName" [(ngModel)]="form.lastName" required /></label>
+        <label>Email<input type="email" name="email" [(ngModel)]="form.email" required /></label>
+        <label>Phone<input name="phone" [(ngModel)]="form.phone" /></label>
+        <label>Password<input type="password" name="password" [(ngModel)]="form.password" required /></label>
+        <label>Confirm password<input type="password" name="passwordConfirm" [(ngModel)]="form.passwordConfirm" required /></label>
+      </div>
+      @if (form.passwordConfirm && form.password !== form.passwordConfirm) {
+        <p class="field-error">Passwords do not match.</p>
+      }
+      <div class="form-actions"><button class="button button-primary" type="submit" [disabled]="volunteerForm.invalid || saving">{{ saving ? 'Registering...' : 'Register volunteer' }}</button></div>
+    </form>
+    }
+
+    @if (notice) { <p class="feedback success" role="status">{{ notice }}</p> }
+    @if (error) { <p class="feedback error" role="alert">{{ error }}</p> }
+
+    @if (loading) { <p class="state">Loading volunteers...</p> } @else {
+      <div class="volunteer-list">
+        @for (volunteer of volunteers; track volunteer.id) {
+          <article class="volunteer-card">
+            <div><strong>{{ volunteer.firstName }} {{ volunteer.lastName }}</strong><span>{{ volunteer.email }}</span><span>{{ volunteer.phone || 'No phone provided' }}</span></div>
+            <div class="volunteer-actions"><span class="status">{{ volunteer.active ? 'Active' : 'Inactive' }}</span><small>Joined {{ volunteer.joinedAt }}</small>@if (canManageVolunteers) { <button class="button button-secondary" type="button" (click)="toggleActive(volunteer)">{{ volunteer.active ? 'Deactivate' : 'Activate' }}</button> }</div>
+          </article>
+        } @empty { <p class="state">No volunteers are registered yet.</p> }
+      </div>
+    }
+  </section>
+</main>

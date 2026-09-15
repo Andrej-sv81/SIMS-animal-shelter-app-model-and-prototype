@@ -1,0 +1,13 @@
+<main class="browse-page">@if (organization)
+    { <header>
+        <p class="eyebrow">Organization</p>
+        <h1>{{ organization.name }}</h1>
+        <p>{{ organization.description || 'Animals currently cared for by this organization.' }}</p>
+    </header> } @if (loading) { <p class="state">Loading animals...</p> } @else { <section class="card-grid">@for
+        (animal of animals; track animal.id) { <a class="animal-card" [routerLink]="['/browse/animals', animal.id]"><img
+                [src]="image(animal)" [alt]="animal.name" />
+            <h2>{{ animal.name }}</h2>
+            <p>{{ animal.species }} · {{ animal.age }} years · {{ animal.gender }}</p><span>{{ animal.status
+                }}</span>
+        </a>} @empty {<p class="state">No animals are registered.</p>}</section> } @if (error) {<p class="error">{{
+        error }}</p>}</main>

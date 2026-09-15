@@ -40,6 +40,10 @@ export class AnimalApiService {
     return this.http.get<Animal[]>(`${this.apiUrl}/${organizationId}/animals`);
   }
 
+  getAllAnimals(): Observable<Animal[]> {
+    return this.http.get<Animal[]>('http://localhost:8080/api/animals');
+  }
+
   createAnimal(organizationId: number, request: AnimalRequest, imageFiles: File[] = []): Observable<Animal> {
     const formData = new FormData();
     formData.append('name', request.name);

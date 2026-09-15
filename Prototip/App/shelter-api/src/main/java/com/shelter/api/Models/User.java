@@ -1,11 +1,15 @@
 package com.shelter.api.Models;
 
+import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
 
 @Entity
 @Table(name = "users")
@@ -23,6 +27,12 @@ public class User {
     private String phone;
     private String passwordHash;
     private String role;
+    private Boolean active;
+    private LocalDateTime joinedAt;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
     protected User() {
     }
@@ -34,6 +44,8 @@ public class User {
         this.phone = phone;
         this.passwordHash = passwordHash;
         this.role = role;
+        this.active = true;
+        this.joinedAt = role.equals("ORGANIZATION_ADMIN") ? LocalDateTime.now() : null;
     }
 
     public Long getId() {
@@ -82,5 +94,33 @@ public class User {
 
     public String getRole() {
         return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public boolean isActive() {
+        return active == null || active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getJoinedAt() {
+        return joinedAt;
+    }
+
+    public void setJoinedAt(LocalDateTime joinedAt) {
+        this.joinedAt = joinedAt;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }
