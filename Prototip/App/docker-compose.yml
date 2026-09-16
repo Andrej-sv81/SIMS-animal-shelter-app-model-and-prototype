@@ -23,9 +23,19 @@ services:
       SPRING_DATASOURCE_PASSWORD: shelter
     ports:
       - "8080:8080"
+    volumes:
+      - shelter-uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
 
+  frontend:
+    build: ./shelter-ui
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
 volumes:
   shelter-postgres-data:
+  shelter-uploads:

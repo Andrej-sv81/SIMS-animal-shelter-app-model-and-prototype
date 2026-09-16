@@ -1,0 +1,200 @@
+<main class="page-shell">
+  <header class="hero">
+    <p class="eyebrow">{{ isSuperAdmin ? 'Shelter administration' : 'Organization workspace' }}</p>
+    <h1>
+      {{
+        isSuperAdmin
+          ? 'Organizations, ready for care.'
+          : isOrganizationScoped
+            ? 'Your organization.'
+            : 'Organization workspace.'
+      }}
+    </h1>
+    <p class="intro">
+      {{
+        isSuperAdmin
+          ? 'Use this workspace to manage organizations and their administrators.'
+          : 'Manage your organization and its registered animals.'
+      }}
+    </p>
+  </header>
+
+  @if (isSuperAdmin) {
+    <section class="workspace" aria-label="Organization management">
+      <div class="workspace-layout">
+        <aside class="vertical-menu">
+          <button
+            class="menu-tab"
+            [class.active]="newOrganizationOpen"
+            type="button"
+            [attr.aria-expanded]="newOrganizationOpen"
+            (click)="toggleNewOrganization()"
+          >
+            <span>New organization</span>
+            <small>Create an organization and its first administrator.</small>
+          </button>
+        </aside>
+
+        @if (newOrganizationOpen) {
+          <div class="workspace-content">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">
+                  {{ editingId === null ? 'New organization' : 'Editing organization' }}
+                </p>
+                <h2>
+                  {{ editingId === null ? 'Register an organization' : 'Update organization' }}
+                </h2>
+              </div>
+              @if (editingId !== null) {
+                <button class="button button-quiet" type="button" (click)="cancelEdit()">
+                  Cancel edit
+                </button>
+              }
+            </div>
+
+            <form
+              class="organization-form"
+              #organizationForm="ngForm"
+              (ngSubmit)="saveOrganization()"
+            >
+              <div class="form-section">
+                <h3>Organization details</h3>
+                <div class="field-grid">
+                  <label>
+                    Name
+                    <input name="name" [(ngModel)]="form.name" required />
+                  </label>
+                  <label>
+                    Bank account
+                    <input name="bankAccount" [(ngModel)]="form.bankAccount" />
+                  </label>
+                  <label class="wide-field">
+                    Description
+                    <textarea name="description" [(ngModel)]="form.description" rows="3"></textarea>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3>First organization administrator</h3>
+                <div class="field-grid">
+                  <label>
+                    First name
+                    <input name="adminFirstName" [(ngModel)]="form.adminFirstName" required />
+                  </label>
+                  <label>
+                    Last name
+                    <input name="adminLastName" [(ngModel)]="form.adminLastName" required />
+                  </label>
+                  <label>
+                    Email
+                    <input type="email" name="adminEmail" [(ngModel)]="form.adminEmail" required />
+                  </label>
+                  <label>
+                    Phone
+                    <input name="adminPhone" [(ngModel)]="form.adminPhone" />
+                  </label>
+                  <label>
+                    Password
+                    <input
+                      type="password"
+                      name="adminPassword"
+                      [(ngModel)]="form.adminPassword"
+                      [required]="editingId === null"
+                    />
+                  </label>
+                  <label>
+                    Confirm password
+                    <input
+                      type="password"
+                      name="adminPasswordConfirm"
+                      [(ngModel)]="form.adminPasswordConfirm"
+                      [required]="editingId === null"
+                    />
+                  </label>
+                  @if (
+                    editingId === null &&
+                    form.adminPasswordConfirm &&
+                    form.adminPassword !== form.adminPasswordConfirm
+                  ) {
+                    <p class="field-error wide-field">Passwords do not match.</p>
+                  }
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button
+                  class="button button-primary"
+                  type="submit"
+                  [disabled]="organizationForm.invalid || saving"
+                >
+                  {{
+                    saving
+                      ? 'Saving...'
+                      : editingId === null
+                        ? 'Create organization'
+                        : 'Save changes'
+                  }}
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  @if (notice) {
+    <p class="feedback success" role="status">{{ notice }}</p>
+  }
+  @if (error) {
+    <p class="feedback error" role="alert">{{ error }}</p>
+  }
+
+  <section class="organizations-section" aria-label="Organizations">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Registered organizations</p>
+        <h2>Organization directory</h2>
+      </div>
+      <span class="count">{{ organizations.length }} total</span>
+    </div>
+
+    @if (loading) {
+      <p class="state">Loading organizations...</p>
+    } @else {
+      <div class="organization-grid">
+        @for (organization of organizations; track organization.id) {
+          <a class="organization-card" [routerLink]="['/organizations', organization.id]">
+            <div class="card-topline">
+              <span class="record-label">Organization {{ organization.id }}</span>
+            </div>
+            <h3>{{ organization.name }}</h3>
+            <p class="description">{{ organization.description || 'No description provided.' }}</p>
+            <dl>
+              <div>
+                <dt>Bank account</dt>
+                <dd>{{ organization.bankAccount || 'Not provided' }}</dd>
+              </div>
+              <div>
+                <dt>Administrator</dt>
+                <dd>{{ organization.admin.firstName }} {{ organization.admin.lastName }}</dd>
+              </div>
+              <div>
+                <dt>Email</dt>
+                <dd>{{ organization.admin.email }}</dd>
+              </div>
+              <div>
+                <dt>Phone</dt>
+                <dd>{{ organization.admin.phone || 'Not provided' }}</dd>
+              </div>
+            </dl>
+          </a>
+        } @empty {
+          <p class="state">No organizations have been registered yet.</p>
+        }
+      </div>
+    }
+  </section>
+</main>

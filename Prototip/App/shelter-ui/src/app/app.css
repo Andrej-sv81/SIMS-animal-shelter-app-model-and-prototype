@@ -2,41 +2,63 @@
   display: block;
 }
 
-.page-shell {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 5rem 1.5rem;
+.app-navbar {
+  align-items: center;
+  background: #183b3b;
+  color: #fffdf8;
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.85rem 1.5rem;
 }
-
-.hero {
-  max-width: 680px;
-  margin-bottom: 3rem;
-}
-
-.eyebrow, .status {
-  color: #bc5b38;
-  font-size: .75rem;
+.app-brand {
+  color: inherit;
   font-weight: 800;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  text-decoration: none;
 }
-
-h1, h2, p { margin-top: 0; }
-
-h1 {
+.app-nav-links {
+  align-items: center;
+  display: flex;
+  gap: 1.25rem;
+}
+.app-nav-links a {
+  color: #fffdf8;
+  font-weight: 700;
+  text-decoration: none;
+}
+.app-nav-links a:hover {
+  color: #f4c2a9;
+}
+.app-nav-links a.active-public-link {
+  border-bottom: 2px solid #f4c2a9;
+  color: #f4c2a9;
+  padding-bottom: 0.2rem;
+}
+.app-user {
+  color: #dfe9df;
+  font-size: 0.9rem;
+}
+.logout-button {
+  background: transparent;
+  border: 1px solid #fffdf8;
+  border-radius: 4px;
+  color: #fffdf8;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 0.45rem 0.75rem;
+}
+.logout-button:hover {
+  background: #fffdf8;
   color: #183b3b;
-  font-size: clamp(2.5rem, 7vw, 5.5rem);
-  line-height: .95;
-  margin-bottom: 1.25rem;
 }
-
-.intro { color: #526664; font-size: 1.1rem; }
-.animal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
-.animal-card { overflow: hidden; background: #fffdf8; border: 1px solid #d9e2db; border-radius: 8px; box-shadow: 0 12px 30px #183b3b14; }
-.image-wrap { aspect-ratio: 4 / 3; background: #dfe9df; }
-.image-wrap img { width: 100%; height: 100%; object-fit: cover; }
-.card-copy { padding: 1.25rem; }
-.card-copy h2 { color: #183b3b; font-size: 1.7rem; }
-button { border: 0; border-radius: 4px; background: #183b3b; color: #fffdf8; cursor: pointer; padding: .7rem 1rem; }
-.state { color: #526664; padding: 2rem 0; }
-.error { color: #a63e2d; }
+@media (max-width: 760px) {
+  .app-navbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .app-nav-links {
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+  }
+}

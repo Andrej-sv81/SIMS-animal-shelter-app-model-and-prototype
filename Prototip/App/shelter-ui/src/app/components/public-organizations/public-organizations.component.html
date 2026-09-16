@@ -1,0 +1,26 @@
+<main class="browse-page">
+  <header>
+    <p class="eyebrow">Open shelter directory</p>
+    <h1>Organizations caring for animals.</h1>
+    <p>Browse the organizations and animals currently in their care.</p>
+  </header>
+  @if (loading) {
+    <p class="state">Loading organizations...</p>
+  } @else {
+    <section class="card-grid">
+      @for (organization of organizations; track organization.id) {
+        <a class="browse-card" [routerLink]="['/browse/organizations', organization.id]"
+          ><p class="eyebrow">Organization {{ organization.id }}</p>
+          <h2>{{ organization.name }}</h2>
+          <p>{{ organization.description || 'No description provided.' }}</p>
+          <strong>View animals</strong></a
+        >
+      } @empty {
+        <p class="state">No organizations are available.</p>
+      }
+    </section>
+  }
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+</main>
